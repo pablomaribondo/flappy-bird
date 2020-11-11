@@ -7,6 +7,8 @@ sprites.src = "./sprites.png";
 const canvas = document.getElementById("game-canvas");
 const context = canvas.getContext("2d");
 
+let frames = 0;
+
 const background = {
   sourceX: 390,
   sourceY: 0,
@@ -64,11 +66,30 @@ const createFlappyBird = () => {
     velocity: 0,
     jump: 4.6,
 
+    moves: [
+      { sourceX: 0, sourceY: 0 },
+      { sourceX: 0, sourceY: 26 },
+      { sourceX: 0, sourceY: 52 },
+      { sourceX: 0, sourceY: 26 },
+    ],
+
+    actualFrame: 0,
+
+    updateFrame() {
+      if (frames % 10 === 0) {
+        const increment = flappyBird.actualFrame + 1;
+        flappyBird.actualFrame = increment % flappyBird.moves.length;
+      }
+    },
+
     draw() {
+      flappyBird.updateFrame();
+      const { sourceX, sourceY } = flappyBird.moves[flappyBird.actualFrame];
+
       context.drawImage(
         sprites,
-        flappyBird.sourceX,
-        flappyBird.sourceY,
+        sourceX,
+        sourceY,
         flappyBird.width,
         flappyBird.height,
         flappyBird.x,
@@ -83,7 +104,7 @@ const createFlappyBird = () => {
     },
 
     update() {
-      if (colision(flappyBird, floor)) {
+      if (colision(flappyBird, globals.floor)) {
         hitEffect.play();
         setTimeout(() => {
           changeScreen(screens.getReady);
@@ -99,39 +120,50 @@ const createFlappyBird = () => {
   return flappyBird;
 };
 
-const floor = {
-  sourceX: 0,
-  sourceY: 610,
-  width: 224,
-  height: 112,
-  x: 0,
-  y: canvas.height - 112,
+const createFloor = () => {
+  const floor = {
+    sourceX: 0,
+    sourceY: 610,
+    width: 224,
+    height: 112,
+    x: 0,
+    y: canvas.height - 112,
 
-  draw() {
-    context.drawImage(
-      sprites,
-      floor.sourceX,
-      floor.sourceY,
-      floor.width,
-      floor.height,
-      floor.x,
-      floor.y,
-      floor.width,
-      floor.height
-    );
+    draw() {
+      context.drawImage(
+        sprites,
+        floor.sourceX,
+        floor.sourceY,
+        floor.width,
+        floor.height,
+        floor.x,
+        floor.y,
+        floor.width,
+        floor.height
+      );
 
-    context.drawImage(
-      sprites,
-      floor.sourceX,
-      floor.sourceY,
-      floor.width,
-      floor.height,
-      floor.x + floor.width,
-      floor.y,
-      floor.width,
-      floor.height
-    );
-  },
+      context.drawImage(
+        sprites,
+        floor.sourceX,
+        floor.sourceY,
+        floor.width,
+        floor.height,
+        floor.x + floor.width,
+        floor.y,
+        floor.width,
+        floor.height
+      );
+    },
+
+    update() {
+      const repeatsIn = floor.width / 2;
+      const movement = floor.x - 1;
+
+      floor.x = movement % repeatsIn;
+    },
+  };
+
+  return floor;
 };
 
 const getReadyMessage = {
@@ -172,7 +204,7 @@ const screens = {
   getReady: {
     draw() {
       background.draw();
-      floor.draw();
+      globals.floor.draw();
       globals.flappyBird.draw();
       getReadyMessage.draw();
     },
@@ -181,13 +213,16 @@ const screens = {
     },
     initialize() {
       globals.flappyBird = createFlappyBird();
+      globals.floor = createFloor();
     },
-    update() {},
+    update() {
+      globals.floor.update();
+    },
   },
   game: {
     draw() {
       background.draw();
-      floor.draw();
+      globals.floor.draw();
       globals.flappyBird.draw();
     },
     click() {
@@ -202,6 +237,8 @@ const screens = {
 const loop = () => {
   activeScreen.draw();
   activeScreen.update();
+
+  frames++;
 
   requestAnimationFrame(loop);
 };
