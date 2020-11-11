@@ -1,3 +1,6 @@
+const hitEffect = new Audio();
+hitEffect.src = "./assets/hit.wav";
+
 const sprites = new Image();
 sprites.src = "./sprites.png";
 
@@ -42,34 +45,58 @@ const background = {
   },
 };
 
-const flappyBird = {
-  sourceX: 0,
-  sourceY: 0,
-  width: 33,
-  height: 24,
-  x: 10,
-  y: 50,
-  gravity: 0.25,
-  velocity: 0,
+const colision = (flappyBird, floor) => {
+  const flappyBirdY = flappyBird.y + flappyBird.height;
+  const floorY = floor.y;
 
-  draw() {
-    context.drawImage(
-      sprites,
-      flappyBird.sourceX,
-      flappyBird.sourceY,
-      flappyBird.width,
-      flappyBird.height,
-      flappyBird.x,
-      flappyBird.y,
-      flappyBird.width,
-      flappyBird.height
-    );
-  },
+  return flappyBirdY >= floorY;
+};
 
-  update() {
-    flappyBird.velocity += flappyBird.gravity;
-    flappyBird.y += flappyBird.velocity;
-  },
+const createFlappyBird = () => {
+  const flappyBird = {
+    sourceX: 0,
+    sourceY: 0,
+    width: 33,
+    height: 24,
+    x: 10,
+    y: 50,
+    gravity: 0.25,
+    velocity: 0,
+    jump: 4.6,
+
+    draw() {
+      context.drawImage(
+        sprites,
+        flappyBird.sourceX,
+        flappyBird.sourceY,
+        flappyBird.width,
+        flappyBird.height,
+        flappyBird.x,
+        flappyBird.y,
+        flappyBird.width,
+        flappyBird.height
+      );
+    },
+
+    hop() {
+      flappyBird.velocity = -flappyBird.jump;
+    },
+
+    update() {
+      if (colision(flappyBird, floor)) {
+        hitEffect.play();
+        setTimeout(() => {
+          changeScreen(screens.getReady);
+        }, 500);
+        return;
+      }
+
+      flappyBird.velocity += flappyBird.gravity;
+      flappyBird.y += flappyBird.velocity;
+    },
+  };
+
+  return flappyBird;
 };
 
 const floor = {
@@ -130,10 +157,15 @@ const getReadyMessage = {
   },
 };
 
+const globals = {};
 let activeScreen = {};
 
 const changeScreen = (newScreen) => {
   activeScreen = newScreen;
+
+  if (activeScreen.initialize) {
+    activeScreen.initialize();
+  }
 };
 
 const screens = {
@@ -141,11 +173,14 @@ const screens = {
     draw() {
       background.draw();
       floor.draw();
-      flappyBird.draw();
+      globals.flappyBird.draw();
       getReadyMessage.draw();
     },
     click() {
       changeScreen(screens.game);
+    },
+    initialize() {
+      globals.flappyBird = createFlappyBird();
     },
     update() {},
   },
@@ -153,10 +188,13 @@ const screens = {
     draw() {
       background.draw();
       floor.draw();
-      flappyBird.draw();
+      globals.flappyBird.draw();
+    },
+    click() {
+      globals.flappyBird.hop();
     },
     update() {
-      flappyBird.update();
+      globals.flappyBird.update();
     },
   },
 };
