@@ -1,12 +1,17 @@
+import Model from "./BaseModel";
 import { canvas, context, sprites } from "../config";
 
-class Floor {
-  sourceX = 0;
-  sourceY = 610;
-  width = 224;
-  height = 112;
-  x = 0;
-  y = canvas.height - 112;
+class Floor extends Model {
+  constructor() {
+    const sourceX = 0;
+    const sourceY = 610;
+    const width = 224;
+    const height = 112;
+    const x = 0;
+    const y = canvas.height - height;
+
+    super(sourceX, sourceY, width, height, x, y);
+  }
 
   draw() {
     context.drawImage(

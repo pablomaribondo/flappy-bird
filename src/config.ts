@@ -1,4 +1,5 @@
 const sprites = new Image();
+
 sprites.src = "../assets/sprites/sprites.png";
 
 const canvas = document.getElementById("game-canvas") as HTMLCanvasElement;

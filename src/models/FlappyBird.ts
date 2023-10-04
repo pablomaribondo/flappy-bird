@@ -1,35 +1,43 @@
-import { context, sprites } from "../config";
 import Game from "./Game";
-import GetReadyScreen from "../screens/GetReadyScreen";
+import GameOverScreen from "../screens/GameOverScreen";
+import Model from "./BaseModel";
+import hitEffect from "../effects/hitEffect";
+import { context, sprites } from "../config";
 
-const hitEffect = new Audio();
-hitEffect.src = "../assets/sounds/hit.wav";
+class FlappyBird extends Model {
+  actualFrame: number;
+  gravity: number;
+  jump: number;
+  moves: { sourceX: number; sourceY: number }[];
+  velocity: number;
 
-class FlappyBird {
-  sourceX = 0;
-  sourceY = 0;
-  width = 33;
-  height = 24;
-  x = 10;
-  y = 50;
-  gravity = 0.1;
-  velocity = 0;
-  jump = 3;
+  constructor() {
+    const sourceX = 0;
+    const sourceY = 0;
+    const width = 33;
+    const height = 24;
+    const x = 10;
+    const y = 50;
 
-  moves = [
-    { sourceX: 0, sourceY: 0 },
-    { sourceX: 0, sourceY: 26 },
-    { sourceX: 0, sourceY: 52 },
-    { sourceX: 0, sourceY: 26 },
-  ];
+    super(sourceX, sourceY, width, height, x, y);
 
-  actualFrame = 0;
+    this.gravity = 0.1;
+    this.velocity = 0;
+    this.jump = 3;
+    this.moves = [
+      { sourceX: 0, sourceY: 0 },
+      { sourceX: 0, sourceY: 26 },
+      { sourceX: 0, sourceY: 52 },
+      { sourceX: 0, sourceY: 26 },
+    ];
+    this.actualFrame = 0;
+  }
 
-  updateFrame() {
-    if (Game.frames % 10 === 0) {
-      const increment = this.actualFrame + 1;
-      this.actualFrame = increment % this.moves.length;
-    }
+  collision() {
+    const flappyBirdY = this.y + this.height;
+    const floorY = Game.floor.y;
+
+    return flappyBirdY >= floorY;
   }
 
   draw() {
@@ -53,24 +61,22 @@ class FlappyBird {
     this.velocity = -this.jump;
   }
 
-  collision() {
-    const flappyBirdY = this.y + this.height;
-    const floorY = Game.floor.y;
-
-    return flappyBirdY >= floorY;
-  }
-
   update() {
     if (this.collision()) {
       hitEffect.play();
-      setTimeout(() => {
-        Game.changeScreen(GetReadyScreen);
-      }, 500);
+      Game.changeScreen(GameOverScreen);
       return;
     }
 
     this.velocity += this.gravity;
     this.y += this.velocity;
+  }
+
+  updateFrame() {
+    if (Game.frames % 10 === 0) {
+      const increment = this.actualFrame + 1;
+      this.actualFrame = increment % this.moves.length;
+    }
   }
 }
 

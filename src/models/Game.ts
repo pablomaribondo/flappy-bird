@@ -1,12 +1,15 @@
-import Pipes from "./Pipes";
-import Floor from "./Floor";
 import Background from "./Background";
-import GetReadyMessage from "./GetReadyMessage";
 import FlappyBird from "./FlappyBird";
+import Floor from "./Floor";
+import GameOverMessage from "./messages/GameOverMessage";
+import GetReadyMessage from "./messages/GetReadyMessage";
+import Pipes from "./Pipes";
+import Scoreboard from "./Scoreboard";
+import { GameOverScreen } from "../screens/GameOverScreen";
 import { GameScreen } from "../screens/GameScreen";
 import { GetReadyScreen } from "../screens/GetReadyScreen";
 
-type Screen = Partial<GetReadyScreen & GameScreen> & Required<{draw(): void, update(): void}>;
+type Screen = Partial<GetReadyScreen & GameScreen & GameOverScreen> & Required<{draw(): void, update(): void}>;
 
 class Game {
   static activeScreen: Screen;
@@ -15,7 +18,9 @@ class Game {
   static floor: Floor;
   static frames: number = 0;
   static getReadyMessage: GetReadyMessage;
+  static gameOverMessage: GameOverMessage;
   static pipes: Pipes;
+  static scoreboard: Scoreboard;
 
   static changeScreen(newScreen: Screen) {
     Game.activeScreen = newScreen;

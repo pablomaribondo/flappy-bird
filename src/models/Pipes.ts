@@ -1,11 +1,12 @@
-import { canvas, context, sprites } from "../config";
-import GetReadyScreen from "../screens/GetReadyScreen";
 import Game from "./Game";
+import GameOverScreen from "../screens/GameOverScreen";
+import hitEffect from "../effects/hitEffect";
+import { canvas, context, sprites } from "../config";
 
 type Pipe = {
   sourceX: number;
   sourceY: number;
-}
+};
 
 type Pair = {
   x: number;
@@ -13,12 +14,12 @@ type Pair = {
   bottomPipe?: {
     x: number;
     y: number;
-  }
+  };
   topPipe?: {
     x: number;
     y: number;
-  }
-}
+  };
+};
 
 class Pipes {
   width: number = 52;
@@ -82,7 +83,7 @@ class Pipes {
     const head = Game.flappyBird.y;
     const foot = Game.flappyBird.y + Game.flappyBird.height;
 
-    if (Game.flappyBird.x >= pair.x) {
+    if (Game.flappyBird.x + Game.flappyBird.width >= pair.x) {
       if (pair?.topPipe && head <= pair.topPipe.y) {
         return true;
       }
@@ -107,7 +108,8 @@ class Pipes {
       pair.x -= 2;
 
       if (this.collision(pair)) {
-        Game.changeScreen(GetReadyScreen);
+        hitEffect.play();
+        Game.changeScreen(GameOverScreen);
       }
 
       if (pair.x + this.width <= 0) {

@@ -1,4 +1,5 @@
 import Game from "../models/Game";
+import Scoreboard from "../models/Scoreboard";
 
 class GameScreen {
   draw() {
@@ -6,6 +7,7 @@ class GameScreen {
     Game.pipes.draw();
     Game.floor.draw();
     Game.flappyBird.draw();
+    Game.scoreboard.draw();
   }
 
   click() {
@@ -16,6 +18,11 @@ class GameScreen {
     Game.pipes.update();
     Game.floor.update();
     Game.flappyBird.update();
+    Game.scoreboard.update();
+  }
+
+  initialize() {
+    Game.scoreboard = new Scoreboard();
   }
 }
 

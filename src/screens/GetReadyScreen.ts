@@ -2,9 +2,10 @@ import Background from "../models/Background";
 import FlappyBird from "../models/FlappyBird";
 import Floor from "../models/Floor";
 import Game from "../models/Game";
-import GetReadyMessage from "../models/GetReadyMessage";
-import Pipes from "../models/Pipes";
+import GameOverMessage from "../models/messages/GameOverMessage";
 import GameScreen from "./GameScreen";
+import GetReadyMessage from "../models/messages/GetReadyMessage";
+import Pipes from "../models/Pipes";
 
 class GetReadyScreen {
   draw() {
@@ -24,6 +25,7 @@ class GetReadyScreen {
     Game.floor = new Floor();
     Game.pipes = new Pipes();
     Game.getReadyMessage = new GetReadyMessage();
+    Game.gameOverMessage = new GameOverMessage();
   }
 
   update() {
