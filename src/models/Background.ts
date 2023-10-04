@@ -1,14 +1,12 @@
-import { canvas, context, sprites } from "../config.js";
+import { canvas, context, sprites } from "../config";
 
 class Background {
-  constructor() {
-    this.sourceX = 390;
-    this.sourceY = 0;
-    this.width = 275;
-    this.height = 204;
-    this.x = 0;
-    this.y = canvas.height - 204;
-  }
+  sourceX = 390;
+  sourceY = 0;
+  width = 275;
+  height = 204;
+  x = 0;
+  y = canvas.height - 204;
 
   draw() {
     context.fillStyle = "#70c5ce";

@@ -1,10 +1,10 @@
-import Background from "../models/Background.js";
-import FlappyBird from "../models/FlappyBird.js";
-import Floor from "../models/Floor.js";
-import Game from "../models/Game.js";
-import GetReadyMessage from "../models/GetReadyMessage.js";
-import Pipes from "../models/Pipes.js";
-import GameScreen from "./GameScreen.js";
+import Background from "../models/Background";
+import FlappyBird from "../models/FlappyBird";
+import Floor from "../models/Floor";
+import Game from "../models/Game";
+import GetReadyMessage from "../models/GetReadyMessage";
+import Pipes from "../models/Pipes";
+import GameScreen from "./GameScreen";
 
 class GetReadyScreen {
   draw() {
@@ -30,5 +30,7 @@ class GetReadyScreen {
     Game.floor.update();
   }
 }
+
+export { GetReadyScreen }
 
 export default new GetReadyScreen();

@@ -1,4 +1,4 @@
-import Game from "../models/Game.js";
+import Game from "../models/Game";
 
 class GameScreen {
   draw() {
@@ -18,5 +18,7 @@ class GameScreen {
     Game.flappyBird.update();
   }
 }
+
+export { GameScreen }
 
 export default new GameScreen();

@@ -1,6 +1,6 @@
-import "./config.js";
-import Game from "./models/Game.js";
-import GetReadyScreen from "./screens/GetReadyScreen.js";
+import "./config";
+import Game from "./models/Game";
+import GetReadyScreen from "./screens/GetReadyScreen";
 
 window.addEventListener("click", () => {
   if (Game.activeScreen.click) {

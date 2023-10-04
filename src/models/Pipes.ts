@@ -1,25 +1,41 @@
-import { canvas, context, sprites } from "../config.js";
-import GetReadyScreen from "../screens/GetReadyScreen.js";
-import Game from "./Game.js";
+import { canvas, context, sprites } from "../config";
+import GetReadyScreen from "../screens/GetReadyScreen";
+import Game from "./Game";
+
+type Pipe = {
+  sourceX: number;
+  sourceY: number;
+}
+
+type Pair = {
+  x: number;
+  y: number;
+  bottomPipe?: {
+    x: number;
+    y: number;
+  }
+  topPipe?: {
+    x: number;
+    y: number;
+  }
+}
 
 class Pipes {
-  constructor() {
-    this.width = 52;
-    this.height = 400;
-    this.bottom = {
-      sourceX: 0,
-      sourceY: 169,
-    };
-    this.top = {
-      sourceX: 52,
-      sourceY: 169,
-    };
-    this.gap = 90;
-    this.pairs = [];
-  }
+  width: number = 52;
+  height: number = 400;
+  bottom: Pipe = {
+    sourceX: 0,
+    sourceY: 169,
+  };
+  top: Pipe = {
+    sourceX: 52,
+    sourceY: 169,
+  };
+  gap: number = 90;
+  pairs: Pair[] = [];
 
   draw() {
-    this.pairs.forEach(pair => {
+    this.pairs.forEach((pair) => {
       const topPipeX = pair.x;
       const topPipeY = pair.y;
 
@@ -62,16 +78,16 @@ class Pipes {
     });
   }
 
-  colision(pair) {
+  collision(pair: Pair) {
     const head = Game.flappyBird.y;
     const foot = Game.flappyBird.y + Game.flappyBird.height;
 
     if (Game.flappyBird.x >= pair.x) {
-      if (head <= pair.topPipe.y) {
+      if (pair?.topPipe && head <= pair.topPipe.y) {
         return true;
       }
 
-      if (foot >= pair.bottomPipe.y) {
+      if (pair?.bottomPipe && foot >= pair.bottomPipe.y) {
         return true;
       }
 
@@ -87,10 +103,10 @@ class Pipes {
       });
     }
 
-    this.pairs.forEach(pair => {
+    this.pairs.forEach((pair) => {
       pair.x -= 2;
 
-      if (this.colision(pair)) {
+      if (this.collision(pair)) {
         Game.changeScreen(GetReadyScreen);
       }
 

@@ -1,14 +1,12 @@
-import { canvas, context, sprites } from "../config.js";
+import { canvas, context, sprites } from "../config";
 
 class GetReadyMessage {
-  constructor() {
-    this.sourceX = 134;
-    this.sourceY = 0;
-    this.width = 174;
-    this.height = 152;
-    this.x = canvas.width / 2 - 174 / 2;
-    this.y = 50;
-  }
+  sourceX = 134;
+  sourceY = 0;
+  width = 174;
+  height = 152;
+  x = canvas.width / 2 - 174 / 2;
+  y = 50;
 
   draw() {
     context.drawImage(

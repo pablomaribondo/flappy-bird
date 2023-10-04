@@ -1,14 +1,12 @@
-import { canvas, context, sprites } from "../config.js";
+import { canvas, context, sprites } from "../config";
 
 class Floor {
-  constructor() {
-    this.sourceX = 0;
-    this.sourceY = 610;
-    this.width = 224;
-    this.height = 112;
-    this.x = 0;
-    this.y = canvas.height - 112;
-  }
+  sourceX = 0;
+  sourceY = 610;
+  width = 224;
+  height = 112;
+  x = 0;
+  y = canvas.height - 112;
 
   draw() {
     context.drawImage(
